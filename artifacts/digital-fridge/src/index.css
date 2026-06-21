@@ -159,9 +159,12 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/40 backdrop-blur-xl border border-white/60 rounded-2xl shadow-sm;
+    @apply bg-white/25 backdrop-blur-xl border border-white/40 rounded-2xl shadow-sm;
+  }
+  .glass-card {
+    @apply bg-white/25 backdrop-blur-xl border border-white/40 rounded-2xl;
   }
   .glass-pill {
-    @apply bg-white/50 backdrop-blur-md border border-white/60 rounded-full px-3 py-1 text-xs font-medium text-gray-700 shadow-sm flex items-center;
+    @apply bg-white/40 backdrop-blur-md border border-white/50 rounded-full px-3 py-1 text-xs font-medium text-gray-600 flex items-center gap-1;
   }
 }
