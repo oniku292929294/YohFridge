@@ -32,8 +32,13 @@ function detectCategory(title: string, explicit?: FridgeCategory): FridgeCategor
   return explicit ?? "task";
 }
 
+function getClient() {
+  if (!supabase) throw new Error("Supabase client is not initialized.");
+  return supabase;
+}
+
 export async function fetchFridgeItems(): Promise<FridgeItem[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from("fridge_items")
     .select("*")
     .order("created_at", { ascending: true });
@@ -44,7 +49,7 @@ export async function fetchFridgeItems(): Promise<FridgeItem[]> {
 
 export async function insertFridgeItem(input: CreateFridgeItem): Promise<FridgeItem> {
   const category = detectCategory(input.title, input.category);
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from("fridge_items")
     .insert([{ ...input, category, done: false }])
     .select()
@@ -55,7 +60,7 @@ export async function insertFridgeItem(input: CreateFridgeItem): Promise<FridgeI
 }
 
 export async function updateFridgeItem(id: number, updates: UpdateFridgeItem): Promise<FridgeItem> {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from("fridge_items")
     .update(updates)
     .eq("id", id)
@@ -67,7 +72,7 @@ export async function updateFridgeItem(id: number, updates: UpdateFridgeItem): P
 }
 
 export async function deleteFridgeItem(id: number): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("fridge_items")
     .delete()
     .eq("id", id);

@@ -1,13 +1,18 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    "Missing Supabase environment variables. " +
-    "Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
-  );
+export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+let _client: SupabaseClient | null = null;
+
+if (supabaseConfigured) {
+  try {
+    _client = createClient(supabaseUrl!, supabaseAnonKey!);
+  } catch (err) {
+    console.error("Failed to initialize Supabase client:", err);
+  }
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = _client;

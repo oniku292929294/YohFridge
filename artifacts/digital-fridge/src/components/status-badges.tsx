@@ -11,6 +11,7 @@ interface DailyConfig {
 }
 
 async function fetchConfig(): Promise<DailyConfig | null> {
+  if (!supabase) throw new Error("Supabase client is not initialized.");
   const { data, error } = await supabase
     .from("daily_config")
     .select("*")
