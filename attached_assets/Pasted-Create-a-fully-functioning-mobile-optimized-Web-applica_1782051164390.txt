@@ -1,0 +1,39 @@
+Create a fully functioning, mobile-optimized Web application named "Digital Fridge". 
+This app is designed to streamline a parent's morning preparation by acting like a clean, minimalist refrigerator door where only today's essential notes and school prints are displayed.
+
+### 1. Technology Stack
+- Frontend: React with Tailwind CSS
+- Backend: Node.js (Express) or Next.js API routes (ready to integrate with Supabase later)
+- Design Framework: Clean, stark minimalism with high-end glassmorphism
+
+### 2. UI/UX Rules & Visual Style
+- **Background**: Pure white (#FFFFFF) with a very soft, faint gradient. Place low-opacity, blurry color shapes (`blur-3xl`) underneath to enhance the glassmorphic backdrop reflection.
+- **Components**: No heavy drop shadows, no black borders. All active items must be glassmorphic plates (`bg-white/40 backdrop-blur-xl border border-white/60 rounded-xl`).
+- **Typography**: Clean, sans-serif (Inter or SF Pro). Use stark font-weight contrasts (Light vs. Bold). Text color should be an elegant charcoal/dark gray (#1C1C1E).
+
+### 3. Core Features & Layout (Single-Screen Focus)
+
+#### [Header Section]
+- A prominent digital clock (HH:MM) that updates in real-time.
+- Current date (e.g., "June 16, Tue") in a light, elegant font weight.
+- A horizontal row of pill-shaped translucent status badges:
+  - "📛 17:00 Dismissal"
+  - "🍱 Lunch Provided"
+  - Minimalist event indicators extracted from calendar screenshots: "⭐", "🐶", "🌀"
+
+#### [Main Area: FRIDGE Tab]
+- Displays active notes (`genre: "task"`). Each card has a very thin, 1px vertical colored accent border on the left side (e.g., mild orange for urgent, nuance pink for school items).
+- Next to each active note, render an **empty circle button** representing uncompleted status.
+- **Interaction**: Clicking the empty circle moves the note down to the "Done" section.
+- **Done Section**: Completed notes automatically show a visible checkmark (☑), text gets a strikethrough, and the card's opacity lowers (dimmed). Clicking a dimmed card instantly restores it back to the active section.
+
+#### [Secondary Area: SHOPPING Tab]
+- Accessible via a fixed bottom navigation bar ("FRIDGE" / "SHOPPING").
+- Displays sorted grocery/shopping items.
+
+### 4. Backend & Future Data Logic (Japanese Keyword Filter)
+- Prepare a mock API endpoint `/api/events` that serves these items.
+- Structure the database/mock data to support these fields: `id`, `title`, `detail`, `genre` ('task' or 'shopping'), `done` (boolean), `dismissal_time`, `has_lunchbox`, and boolean flags for `has_star`, `has_dog`, and `has_spiral`.
+- **Crucial Sorting Logic**: Include a backend helper function that automatically flags an item as `genre: "shopping"` if the input text contains the Japanese keyword "買う" (e.g., "牛乳 買う"). Do NOT use English keywords like "buy". If "買う" is not included, it should default to `genre: "task"`.
+
+Please set up the entire workspace, including the frontend UI components and the backend server architecture so it's fully interactive.
