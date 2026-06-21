@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface TabBarProps {
@@ -9,40 +8,32 @@ interface TabBarProps {
 
 export function TabBar({ activeTab, onChange, activeCount }: TabBarProps) {
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-md px-6 z-50">
-      <div className="glass-panel p-2 flex relative rounded-full">
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-6 pt-2 pointer-events-none">
+      <div className="pointer-events-auto flex gap-8 px-10 py-3 rounded-full bg-white/30 backdrop-blur-xl border border-white/40">
         <button
           onClick={() => onChange("task")}
           className={cn(
-            "flex-1 py-3 text-sm font-semibold tracking-wide relative z-10 transition-colors duration-300 rounded-full flex items-center justify-center gap-1.5",
-            activeTab === "task" ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+            "text-[13px] font-semibold tracking-widest uppercase transition-colors duration-150 flex items-center gap-1.5",
+            activeTab === "task" ? "text-[#1C1C1E]" : "text-gray-400 hover:text-gray-600"
           )}
         >
-          FRIDGE
+          Fridge
           {activeCount > 0 && activeTab !== "task" && (
-            <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-orange-400 rounded-full">
+            <span className="inline-flex items-center justify-center w-4 h-4 text-[9px] font-bold text-white bg-rose-400 rounded-full">
               {activeCount}
             </span>
           )}
         </button>
+        <span className="text-gray-300 text-sm select-none">·</span>
         <button
           onClick={() => onChange("shopping")}
           className={cn(
-            "flex-1 py-3 text-sm font-semibold tracking-wide relative z-10 transition-colors duration-300 rounded-full",
-            activeTab === "shopping" ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+            "text-[13px] font-semibold tracking-widest uppercase transition-colors duration-150",
+            activeTab === "shopping" ? "text-[#1C1C1E]" : "text-gray-400 hover:text-gray-600"
           )}
         >
-          SHOPPING
+          Shopping
         </button>
-        
-        {/* Animated Background Indicator */}
-        <motion.div
-          className="absolute top-2 bottom-2 w-[calc(50%-8px)] bg-white/60 rounded-full shadow-sm"
-          animate={{
-            left: activeTab === "task" ? "8px" : "calc(50% + 4px)",
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        />
       </div>
     </div>
   );

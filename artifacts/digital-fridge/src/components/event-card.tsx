@@ -1,7 +1,6 @@
 import { Event } from "@workspace/api-client-react";
 import { useUpdateEvent, getListEventsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const ACCENT_MAP: Record<string, string> = {
@@ -38,25 +37,22 @@ export function EventCard({ event }: { event: Event }) {
   const dotColor = accentDotColor(event.accent_color);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: event.done ? 0.45 : 1, y: 0 }}
-      exit={{ x: 56, opacity: 0, transition: { duration: 0.18, ease: "easeIn" } }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
+    <div
       className={cn(
-        "glass-card flex items-center gap-3 px-4 py-3.5",
-        event.done && "shadow-none"
+        "flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200",
+        "bg-white/15 backdrop-blur-xl border border-white/30",
+        event.done ? "opacity-40" : "opacity-100"
       )}
     >
       <span
-        className="shrink-0 w-2 h-2 rounded-full mt-0.5"
+        className="shrink-0 w-2 h-2 rounded-full mt-0.5 transition-colors duration-200"
         style={{ backgroundColor: event.done ? "#d1d5db" : dotColor }}
       />
 
       <div className="flex-1 min-w-0">
         <h3
           className={cn(
-            "text-[15px] font-medium text-[#1C1C1E] leading-snug truncate transition-all",
+            "text-[15px] font-medium text-[#1C1C1E] leading-snug truncate transition-all duration-200",
             event.done && "line-through text-gray-400 font-normal"
           )}
         >
@@ -70,18 +66,25 @@ export function EventCard({ event }: { event: Event }) {
       <button
         onClick={toggleDone}
         aria-label={event.done ? "Mark incomplete" : "Mark complete"}
-        className="shrink-0 w-6 h-6 rounded-full border-[1.5px] flex items-center justify-center transition-all active:scale-90 focus:outline-none"
+        disabled={updateEvent.isPending}
+        className="shrink-0 w-6 h-6 rounded-full border-[1.5px] flex items-center justify-center transition-all duration-150 active:scale-90 focus:outline-none disabled:opacity-50"
         style={{
           borderColor: event.done ? "#d1d5db" : dotColor,
-          backgroundColor: event.done ? "#f3f4f6" : "transparent",
+          backgroundColor: event.done ? "rgba(243,244,246,0.6)" : "transparent",
         }}
       >
         {event.done && (
           <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-            <path d="M1 4L3.5 6.5L9 1" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M1 4L3.5 6.5L9 1"
+              stroke="#9ca3af"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         )}
       </button>
-    </motion.div>
+    </div>
   );
 }
