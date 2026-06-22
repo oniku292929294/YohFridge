@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Clock } from "@/components/clock";
 import { StatusBadges } from "@/components/status-badges";
 import { EventList } from "@/components/event-list";
-import { TabBar } from "@/components/tab-bar";
+import { ScheduleList } from "@/components/schedule-list";
+import { TabBar, type AppTab } from "@/components/tab-bar";
 import {
   fetchFridgeItems,
   insertFridgeItem,
@@ -14,7 +15,7 @@ import {
 const FRIDGE_ITEMS_KEY = ["fridge_items"];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<FridgeCategory>("task");
+  const [activeTab, setActiveTab] = useState<AppTab>("task");
   const queryClient = useQueryClient();
 
   const { data: allItems = [] } = useQuery({
@@ -42,7 +43,9 @@ export default function Home() {
     toggleMutation.mutate({ id, done });
   };
 
-  const filteredItems = allItems.filter((i) => i.category === activeTab);
+  const filteredItems = allItems.filter(
+    (i) => i.category === activeTab && activeTab !== "schedule"
+  );
   const activeTaskCount = allItems.filter((i) => i.category === "task" && !i.done).length;
 
   return (
@@ -58,13 +61,17 @@ export default function Home() {
         </header>
 
         <div className="flex-1 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out delay-150 fill-mode-both">
-          <EventList
-            items={filteredItems}
-            category={activeTab}
-            onAdd={handleAdd}
-            onToggle={handleToggle}
-            isAdding={addMutation.isPending}
-          />
+          {activeTab === "schedule" ? (
+            <ScheduleList />
+          ) : (
+            <EventList
+              items={filteredItems}
+              category={activeTab as FridgeCategory}
+              onAdd={handleAdd}
+              onToggle={handleToggle}
+              isAdding={addMutation.isPending}
+            />
+          )}
         </div>
       </main>
 
