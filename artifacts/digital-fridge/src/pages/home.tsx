@@ -3,24 +3,30 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Clock } from "@/components/clock";
 import { StatusBadges } from "@/components/status-badges";
 import { EventList } from "@/components/event-list";
-import { ScheduleList } from "@/components/schedule-list";
-import { TabBar, type AppTab } from "@/components/tab-bar";
+import { TabBar } from "@/components/tab-bar";
 import {
   fetchFridgeItems,
   insertFridgeItem,
   updateFridgeItem,
   type FridgeCategory,
 } from "@/lib/fridge-items";
+import { fetchUpcomingSchedule } from "@/lib/schedule";
 
 const FRIDGE_ITEMS_KEY = ["fridge_items"];
+const SCHEDULE_KEY = ["kndr_schedule"];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<AppTab>("task");
+  const [activeTab, setActiveTab] = useState<"task" | "shopping">("task");
   const queryClient = useQueryClient();
 
   const { data: allItems = [] } = useQuery({
     queryKey: FRIDGE_ITEMS_KEY,
     queryFn: fetchFridgeItems,
+  });
+
+  const { data: scheduleItems = [] } = useQuery({
+    queryKey: SCHEDULE_KEY,
+    queryFn: fetchUpcomingSchedule,
   });
 
   const addMutation = useMutation({
@@ -43,9 +49,7 @@ export default function Home() {
     toggleMutation.mutate({ id, done });
   };
 
-  const filteredItems = allItems.filter(
-    (i) => i.category === activeTab && activeTab !== "schedule"
-  );
+  const filteredItems = allItems.filter((i) => i.category === activeTab);
   const activeTaskCount = allItems.filter((i) => i.category === "task" && !i.done).length;
 
   return (
@@ -61,17 +65,14 @@ export default function Home() {
         </header>
 
         <div className="flex-1 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out delay-150 fill-mode-both">
-          {activeTab === "schedule" ? (
-            <ScheduleList />
-          ) : (
-            <EventList
-              items={filteredItems}
-              category={activeTab as FridgeCategory}
-              onAdd={handleAdd}
-              onToggle={handleToggle}
-              isAdding={addMutation.isPending}
-            />
-          )}
+          <EventList
+            items={filteredItems}
+            scheduleItems={activeTab === "task" ? scheduleItems : []}
+            category={activeTab}
+            onAdd={handleAdd}
+            onToggle={handleToggle}
+            isAdding={addMutation.isPending}
+          />
         </div>
       </main>
 
